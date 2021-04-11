@@ -14,33 +14,26 @@
 
 int main(void) {
 	DDRA = 0x00; PORTA = 0xFF; // Configure port A's 8 pins as inputs
-	DDRC = 0x0F; PORTC = 0x00; // Configure port B's 8 pins as outputs, initialize to 0s
-	unsigned char cntavail = 0;
-	unsigned char A0, A1, A2, A3, A7;
+	DDRC = 0xFF; PORTC = 0x00; // Configure port B's 8 pins as outputs, initialize to 0s
+	unsigned char A3to0;
 	while(1) {
 		// 1) Read input
-		cntavail = 4;
-		A0 = PINA & 0x01; //00000001 = pin 0
-		A1 = PINA & 0x02; //00000010 = pin 1
-		A2 = PINA & 0x04; //00000100 = pin 2
-		A3 = PINA & 0x08; //00001000 = pin 3
-		A7 = PINA & 0x80;
-		if(A0 == 1) {
-		   cntavail = cntavail - 1;
-		}
-		if(A1 == 1) {
-		   cntavail = cntavail - 1;
-		}
-		if(A2 == 1) {
-		   cntavail = cntavail - 1;
-		}
-		if(A3 == 1) {
-		   cntavail = cntavail - 1;
-		}
-		if(cntavail == 0) {
-		   A7 = PINA | 0x80;
-		}
-		PORTC = PORTC | A0 | A1 | A2 | A3 | A7; 
+        A3to0 = PINA;
+        if(A3to0 == 0x00) {
+            PORTC = 0x04;
+        }
+        else if(A3to0 == 0x01 || A3to0 == 0x02 || A3to0 == 0x04 || A3to0 == 0x08) {
+            PORTC = 0x03;
+        }
+        else if(A3to0 == 0x03 || A3to0 == 0x05 || A3to0 == 0x06 || A3to0 == 0x09 || A3to0 == 0x0A || A3to0 == 0x0C) {
+            PORTC = 0x02;
+        }
+        else if(A3to0 == 0x07 || A3to0 == 0x0B || A3to0 == 0x0D || 0x0E) {
+            PORTC = 0x01;
+        }
+		else if(A3to0 == 0x0F) {
+		   PORTC = 0x80;
+		}		 
 	}
 	return 1;
 }
