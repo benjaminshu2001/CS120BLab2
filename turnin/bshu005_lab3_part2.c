@@ -19,7 +19,7 @@ int main(void) {
     unsigned char tempC = 0x00;
 	while(1) {
 		// 1) Read input
-		tempA = PINA;
+		tempA = PINA & 0x3F;
         
 		switch(tempA) {
             case 15:
