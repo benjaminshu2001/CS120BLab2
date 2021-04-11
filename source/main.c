@@ -22,8 +22,7 @@ int main(void) {
     unsigned char tempC = 0x00;
     unsigned char tempD0 = 0x00;	
     unsigned char tempD1 = 0x00;
-    unsigned char totalWeight = 0x00;
-    unsigned char cutTotal = 0x00;
+    unsigned short totalWeight = 0x0000;
 	while(1) {
 		// 1) Read input
 		
@@ -32,15 +31,13 @@ int main(void) {
         tempC = PINC;
         
         totalWeight = tempA + tempB + tempC;
-        cutTotal = totalWeight >> 2;
-        PORTD = cutTotal;
         if(totalWeight > 140) { //if weight exceeds 140 kg, set PD0 to 1
             tempD0 = tempD0 | 0x01;
         }
         if((PINA - PINC) > 80 || (PINC - PINA) > 80) {
             tempD1 = tempD1 | 0x02;
         }  
-        PORTD = PORTD | tempD0 | tempD1;
+        PORTD = (totalWeight & 0x00FC) | tempD0 | tempD1;
 	}
 	return 1;
 }
