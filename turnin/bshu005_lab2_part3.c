@@ -19,7 +19,7 @@ int main(void) {
 	while(1) {
 		// 1) Read input
         A3to0 = PINA;
-        if(A3to0 == 0x00) {
+        if(A3to0 == 0x00 || A3to0 == 0x80) {
             PORTC = 0x04;
         }
         else if(A3to0 == 0x01 || A3to0 == 0x02 || A3to0 == 0x04 || A3to0 == 0x08) {
@@ -28,10 +28,10 @@ int main(void) {
         else if(A3to0 == 0x03 || A3to0 == 0x05 || A3to0 == 0x06 || A3to0 == 0x09 || A3to0 == 0x0A || A3to0 == 0x0C) {
             PORTC = 0x02;
         }
-        else if(A3to0 == 0x07 || A3to0 == 0x0B || A3to0 == 0x0D || 0x0E) {
+        else if(A3to0 == 0x07 || A3to0 == 0x0B || A3to0 == 0x0D || A3to0 == 0x0E) {
             PORTC = 0x01;
         }
-		else if(A3to0 == 0x0F) {
+		else if(A3to0 == 0x0F){
 		   PORTC = 0x80;
 		}		 
 	}
