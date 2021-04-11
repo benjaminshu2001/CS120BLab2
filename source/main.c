@@ -1,7 +1,7 @@
 /*	Author: bshu005
  *  Partner(s) Name: None
  *	Lab Section:
- *	Assignment: Lab #3  Exercise #2
+ *	Assignment: Lab #3  Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -19,38 +19,50 @@ int main(void) {
     unsigned char tempC = 0x00;
 	while(1) {
 		// 1) Read input
-		tempA = PINA & 0x3F;
-        
+		tempA = PINA & 0x7F;
+        //PA4 = 1 if key is in ignition
+        //PA5 = 1 if driver is seated
+        //PA6 is 1 if seatbelt is fastened
+        //PC7 checks if driver is seated, engine on, but no seatbelt ==> PA4 && PA5 && !PA6 
+        //0011 0000
+        // 0111 1111
+        if(((tempA & 0x30) == 0x30) && (tempA & 0x40) != 0x40) {
+            tempC = 0x80;
+        } else {
+            tempC = 0x00;
+            tempA = PINA & 0x0F;
+        }
+        tempA = PINA & 0x0F;
 		switch(tempA) {
             case 15:
             case 14:
             case 13:
-                tempC = 0x3F; //13-15 ==> PC5-PC0 on, 0011 1111
+                tempC = tempC | 0x3F; //13-15 ==> PC5-PC0 on, 0011 1111
                 break;
             case 12:
             case 11:
             case 10:
-                tempC = 0x3E; //10-12 ==> PC5-PC1 on, 0011 1110
+                tempC = tempC | 0x3E; //10-12 ==> PC5-PC1 on, 0011 1110
                 break;
             case 9:
             case 8:
             case 7: 
-                tempC = 0x3C;  //7-9 ==> PC5-PC2 on, 0011 1100
+                tempC = tempC | 0x3C;  //7-9 ==> PC5-PC2 on, 0011 1100
                 break;
             case 6:
             case 5:
-                tempC = 0x38; //5-6 ==> PC5-PC3 on, 0011 1000
+                tempC = tempC | 0x38; //5-6 ==> PC5-PC3 on, 0011 1000
                 break;
             case 4:
             case 3:
-                tempC = 0x70; //3-4 ==> PC5-PC4 on, 0111 0000, PC6 = 1 since level <=4
+                tempC = tempC | 0x70; //3-4 ==> PC5-PC4 on, 0111 0000, PC6 = 1 since level <=4
                 break;   
             case 2:
             case 1:
-                tempC = 0x60;  //1-2 ==> PC5 on, PC6 = 1, 0110 0000
+                tempC = tempC | 0x60;  //1-2 ==> PC5 on, PC6 = 1, 0110 0000
 	            break;
             default:
-                tempC = 0x40;
+                tempC = tempC | 0x40;
                 break;
         }
         PORTC = tempC;
