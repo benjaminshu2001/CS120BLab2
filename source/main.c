@@ -18,23 +18,22 @@ int main(void) {
     DDRC = 0x00; PORTC = 0xFF;
     DDRD = 0xFF; PORTD = 0x00; //Port D = output, initialize ports as 0
     unsigned char tempA, tempB, tempC, tempD;	
-    unsigned char totalWeight = 0x00;
+    unsigned short totalWeight = 0x0000;
     unsigned char cutTotal = 0x00;
 	while(1) {
 		// 1) Read input
 		tempA = PINA;
         tempB = PINB;
         tempC = PINC;
-        tempD = 0x00;
         totalWeight = tempA + tempB + tempC;
-        cutTotal = totalWeight >> 2;
-        if(totalWeight > 0x8C) { //if weight exceeds 140 kg, set PD0 to 1
-            tempD = tempD | 0x01;
+        if(totalWeight > 140) { //if weight exceeds 140 kg, set PD0 to 1 1100 0100 1100 0001
+            tempD = 0x01;
         }
         if((PINA - PINC) > 80 || (PINC - PINA) > 80) {
             tempD = tempD | 0x02;
         }
-        PORTD = ((PORTD | cutTotal) << 2) | tempD;    
+
+        PORTD = ((totalWeight >> 2) & 0xFC)  | tempD;   
 	}
 	return 1;
 }
