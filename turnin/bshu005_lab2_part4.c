@@ -29,11 +29,14 @@ int main(void) {
         if(totalWeight > 140) { //if weight exceeds 140 kg, set PD0 to 1 1100 0100 1100 0001
             tempD = 0x01;
         }
+        else {
+            tempD = 0x00;
+        }
         if((PINA - PINC) > 80 || (PINC - PINA) > 80) {
             tempD = tempD | 0x02;
         }
 
         PORTD = ((totalWeight >> 2) & 0xFC)  | tempD;   
 	}
-	return 1;
+	return 0;
 }
